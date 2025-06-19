@@ -21,14 +21,14 @@ function renderTasks() {
             renderTasks();
         };
 
-        // Task details
+        
         const details = document.createElement('div');
         details.className = 'task-details';
         details.innerHTML = `<strong>Subject:</strong> ${task.subject} <br>
                              <strong>Chapters:</strong> ${task.chapters} <br>
                              <strong>Time:</strong> ${task.time} min`;
 
-        // Timer display
+        
         const timer = document.createElement('span');
         timer.className = 'task-timer';
         timer.textContent = formatTime(task.remainingTime);
@@ -44,11 +44,18 @@ function renderTasks() {
         resetBtn.onclick = () => resetTimer(idx);
         resetBtn.className = 'timer-btn';
 
+        // Delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '❌';
+        deleteBtn.className = 'delete-btn';
+        deleteBtn.onclick = () => deleteTask(idx);
+
         li.appendChild(checkbox);
         li.appendChild(details);
         li.appendChild(timer);
         li.appendChild(startBtn);
         li.appendChild(resetBtn);
+        li.appendChild(deleteBtn);
         tasksList.appendChild(li);
     });
 }
@@ -108,6 +115,17 @@ function resetTimer(idx) {
     task.remainingTime = task.time * 60;
     task.timerRunning = false;
     renderTasks();
+}
+
+function deleteTask(idx) {
+    if (confirm('Are you sure you want to delete this task?')) {
+        const task = tasks[idx];
+        if (task.timerInterval) {
+            clearInterval(task.timerInterval);
+        }
+        tasks.splice(idx, 1);
+        renderTasks();
+    }
 }
 
 renderTasks(); 
